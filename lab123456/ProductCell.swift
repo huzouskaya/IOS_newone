@@ -31,7 +31,7 @@ class ProductCell: UICollectionViewCell {
             make.width.equalTo(UIScreen.main.bounds.width / 3)
         }
 
-        nameLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        nameLabel.font = UIFont.boldSystemFont(ofSize: 18)
         nameLabel.numberOfLines = 1
         nameLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(8)
@@ -39,13 +39,14 @@ class ProductCell: UICollectionViewCell {
             make.trailing.equalToSuperview().offset(-11)
         }
 
-        descriptionLabel.font = UIFont.systemFont(ofSize: 14)
+        descriptionLabel.font = UIFont.systemFont(ofSize: 15)
         descriptionLabel.numberOfLines = 3
         descriptionLabel.textColor = .gray
         descriptionLabel.snp.makeConstraints { make in
-            make.top.equalTo(nameLabel.snp.bottom).offset(4)
+            make.top.equalTo(nameLabel.snp.bottom).offset(1)
             make.leading.equalTo(productImageView.snp.trailing).offset(11)
             make.trailing.equalToSuperview().offset(-11)
+            make.bottom.lessThanOrEqualToSuperview().offset(-8)
         }
 
         priceButton.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
