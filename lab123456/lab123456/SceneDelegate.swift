@@ -11,7 +11,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         
         // Create your initial view controller
-        let mainViewController = ViewController()
+        let mainViewController = CatalogViewController()
         let navigationController = UINavigationController(rootViewController: mainViewController)
         
         // Set the root view controller
