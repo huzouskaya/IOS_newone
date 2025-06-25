@@ -3,63 +3,248 @@ import SnapKit
 
 final class CatalogViewController: UIViewController {
     
+    private let categoriesScrollView = UIScrollView()
+        private let categoriesStackView = UIStackView()
+        private let collectionView: UICollectionView = {
+            let layout = UICollectionViewFlowLayout()
+            layout.minimumLineSpacing = 16
+            layout.minimumInteritemSpacing = 16
+            let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+            cv.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.96, alpha: 1)
+            cv.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseID)
+            return cv
+        }()
+        private let bottomMenuView = UIView()
+        private let menuButton = UIButton()
+        private let cartButton = UIButton()
+        
+        private let categories = ["Новинки", "Одежда", "Обувь", "Аксессуары"]
+        private var selectedCategoryIndex = 0
+    
     private let products: [Product] = [
         Product(
-            name: "Кожаные лоферы",
-            description: "Лоферы из натуральной кожи. Фигурная союзка с фактурным швом по контуру. Зауженный мыс. Кожаная стелька и подкладка. Прорезиненная подошва. В комплект входит пыльник.",
-            price: 14999,
-            imageName: "lofer",
+            name: "Блейзер прямого кроя",
+            description: """
+            Двубортный блейзер прямого кроя из ткани на основе лиоцелла и вискозы.
+            Отложной воротник с заостренными лацканами.
+            Длинные рукава с пуговицами на манжетах, подплечники.
+            Передние карманы с клапанами.
+            Нагрудный прорезной карман.
+            Внутренние карманы.
+            Подкладка в тон.
+            Застежка на пуговицы.
+            """,
+            price: 2970,
+            imageName: "blazer",
             sizes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
-            specs: "Материал: натуральная кожа\nЦвет: черный"
+            specs: """
+        Материал: 65% лиоцелл, 35% вискоза (плотность 280 г/м²)
+        Подкладка: 100% вискоза (атласное плетение)
+        Конструкция: полуприлегающий силуэт с подплечниками
+        Детали:
+        - 2 внутренних кармана (один с клапаном)
+        - Нагрудный карман для платка
+        - 4 функциональные пуговицы на рукавах
+        Фурнитура: пуговицы из рога буйвала
+        Цвет: глубокий синий (цвет midnight blue)
+        Уход: только химчистка
+        Производство: Италия (ручная сборка)
+        Артикул: BL-7742-500
+        """
         ),
         Product(
-            name: "Кожаные лоферы",
-            description: "Лоферы из натуральной кожи. Фигурная союзка с фактурным швом по контуру. Зауженный мыс. Кожаная стелька и подкладка. Прорезиненная подошва. В комплект входит пыльник.",
-            price: 14999,
-            imageName: "lofer",
-            sizes: ["38", "39", "40", "41", "42"],
-            specs: "Материал: натуральная кожа\nЦвет: черный"
+            name: "Брюки из лиоцелла",
+            description: "Брюки прямого кроя из ткани на основе лиоцелла и вискозы. Защипы под поясом. Передние классические карманы и прорезные карманы сзади. Застежка на молнию, внешнюю и внутреннюю пуговицы.",
+            price: 7500,
+            imageName: "trousers",
+            sizes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
+            specs: """
+        Материал: 70% лиоцелл, 30% вискоза (плотность 240 г/м²)
+        Подкладка: 100% вискоза (в области пояса и карманов)
+        Особенности: защипы под поясом для идеальной посадки
+        Карманы: 2 передних классических + 2 прорезных сзади
+        Застежка: молния + пуговица (внешняя и внутренняя)
+        Цвет: угольно-черный (стойкое окрашивание)
+        Уход: химчистка или деликатная стирка при 30°C
+        Длина: стандартная (возможен подгиб)
+        Производство: Португалия
+        Артикул: TR-8891-100
+        """
         ),
         Product(
-            name: "Кожаные лоферы",
-            description: "Лоферы из натуральной кожи. Фигурная союзка с фактурным швом по контуру. Зауженный мыс. Кожаная стелька и подкладка. Прорезиненная подошва. В комплект входит пыльник.",
+            name: "Кардиган из хлопка",
+            description: """
+        Уютный кардиган из плотного хлопка с короткими рукавами и застежкой на пуговицы.
+        Классический прямой крой подходит для любого типа фигуры.
+        Универсальная модель для создания многослойных образов.
+        Идеально сочетается с футболками, рубашками и блузами.
+        """,
             price: 14999,
-            imageName: "lofer",
-            sizes: ["38", "39", "40", "41", "42"],
-            specs: "Материал: натуральная кожа\nЦвет: черный"
+            imageName: "cardigan",
+            sizes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
+            specs: """
+        Материал: 100% хлопок (плотность 280 г/м²)
+        Уход: машинная стирка при 30°C, глажка на средней температуре
+        Цвет: черный (не линяет)
+        Фурнитура: пуговицы из натурального перламутра
+        Производство: Италия
+        Сезон: весна/лето
+        Артикул: CW-2294-001
+        """
+        ),
+        Product(
+            name: "Джинсы straight fit",
+            description: """
+        Классические прямые джинсы универсального кроя из плотного хлопка.
+        Модель с пятью карманами: два передних, два задних и маленький
+        карман для монет. Удобная посадка по фигуре без стягивания.
+        Металлическая фурнитура и прочные двойные строчки для долговечности.
+        """,
+            price: 6750,
+            imageName: "jeans",
+            sizes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
+            specs: """
+        Материал: 98% хлопок, 2% эластан (плотность 12 oz)
+        Посадка: универсальный straight fit (прямой крой)
+        Детали: 5 карманов (включая маленький для монет), металлическая фурнитура
+        Цвет: классический синий (не выцветает)
+        Уход: стирка при 30°C, избегайте отбеливания
+        Длина: стандартная (подходит для роста 170-190 см)
+        Производство: Турция
+        Артикул: DN-4567-301
+        """
         ),
     ]
-    
-    private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 16
-        layout.minimumInteritemSpacing = 16
-        layout.sectionInset = UIEdgeInsets(top: 16, left: 11, bottom: 16, right: 11) // Отступы
-        
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.96, alpha: 1)
-        cv.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseID)
-        cv.dataSource = self
-        cv.delegate = self
-        return cv
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        title = "Каталог"
-        navigationItem.backButtonTitle = ""
     }
     
     private func setupUI() {
-        view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.96, alpha: 1)
-        view.addSubview(collectionView)
+        view.backgroundColor = UIColor(named: "White")
         
+        setupCategories()
+        
+        view.addSubview(collectionView)
+        collectionView.dataSource = self
+        collectionView.delegate = self
         collectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalTo(categoriesScrollView.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-60)
+        }
+        
+        setupBottomMenu()
+    }
+ 
+        private func setupCategories() {
+            let categoriesContainer = UIView()
+            categoriesContainer.backgroundColor = UIColor(named: "White")
+            categoriesContainer.layer.shadowColor = UIColor.black.cgColor
+            categoriesContainer.layer.shadowOffset = CGSize(width: 0, height: 2)
+            categoriesContainer.layer.shadowOpacity = 0.1
+            categoriesContainer.layer.shadowRadius = 4
+            
+            view.addSubview(categoriesContainer)
+            categoriesContainer.snp.makeConstraints { make in
+                make.top.equalTo(view.safeAreaLayoutGuide)
+                make.leading.trailing.equalToSuperview()
+                make.height.equalTo(50)
+            }
+            categoriesScrollView.showsHorizontalScrollIndicator = false
+            view.addSubview(categoriesScrollView)
+            categoriesScrollView.snp.makeConstraints { make in
+                make.top.equalTo(view.safeAreaLayoutGuide)
+                make.leading.trailing.equalToSuperview()
+                make.height.equalTo(50)
+            }
+            
+            categoriesStackView.axis = .horizontal
+            categoriesStackView.spacing = 20
+            categoriesStackView.alignment = .center
+            categoriesScrollView.addSubview(categoriesStackView)
+            categoriesStackView.snp.makeConstraints { make in
+                make.edges.equalToSuperview().inset(UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
+                make.height.equalToSuperview()
+            }
+            
+            for (index, category) in categories.enumerated() {
+                let button = UIButton(type: .system)
+                button.setTitle(category, for: .normal)
+                button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .medium)
+                button.setTitleColor(index == 0 ? .white : .darkGray, for: .normal)
+                button.backgroundColor = index == 0 ? UIColor(named: "ExtraDark") : UIColor(named: "Gray")
+                button.layer.cornerRadius = 16
+                button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+                button.tag = index
+                button.addTarget(self, action: #selector(categoryTapped(_:)), for: .touchUpInside)
+                categoriesStackView.addArrangedSubview(button)
+            }
+        }
+        
+        private func setupBottomMenu() {
+            bottomMenuView.backgroundColor = .white
+            view.addSubview(bottomMenuView)
+            bottomMenuView.snp.makeConstraints { make in
+                make.leading.trailing.equalToSuperview()
+                make.bottom.equalTo(view.safeAreaLayoutGuide)
+                make.height.equalTo(60)
+            }
+            
+            let buttonsContainer = UIView()
+            bottomMenuView.addSubview(buttonsContainer)
+            buttonsContainer.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.centerY.equalToSuperview()
+                make.height.equalTo(40)
+            }
+            
+            menuButton.setImage(UIImage(named: "menu"), for: .normal)
+            menuButton.tintColor = .black
+            buttonsContainer.addSubview(menuButton)
+            menuButton.snp.makeConstraints { make in
+                make.leading.equalToSuperview()
+                make.centerY.equalToSuperview()
+                make.width.height.equalTo(30)
+            }
+            
+            cartButton.setImage(UIImage(named: "cart"), for: .normal)
+            cartButton.tintColor = .black
+            buttonsContainer.addSubview(cartButton)
+            cartButton.snp.makeConstraints { make in
+                make.leading.equalTo(menuButton.snp.trailing).offset(40)
+                make.trailing.equalToSuperview()
+                make.centerY.equalToSuperview()
+                make.width.height.equalTo(30)
+            }
+            
+            let separator = UIView()
+            separator.backgroundColor = .lightGray.withAlphaComponent(0.5)
+            bottomMenuView.addSubview(separator)
+            separator.snp.makeConstraints { make in
+                make.top.leading.trailing.equalToSuperview()
+                make.height.equalTo(1)
+            }
+        }
+        
+        @objc private func categoryTapped(_ sender: UIButton) {
+            categoriesStackView.arrangedSubviews.forEach { view in
+                guard let button = view as? UIButton else { return }
+                button.backgroundColor = UIColor(named: "Gray")
+                button.setTitleColor(.darkGray, for: .normal)
+                button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .medium)
+            }
+            
+            sender.backgroundColor = UIColor(named: "ExtraDark")
+            sender.setTitleColor(.white, for: .normal)
+            sender.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+            
+            selectedCategoryIndex = sender.tag
+            print("Выбрана категория:", categories[sender.tag])
         }
     }
-}
+
 
 extension CatalogViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

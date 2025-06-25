@@ -103,8 +103,8 @@ class ProductDetailViewController: UIViewController {
     private func setupProductDescription() {
         productDescriptionLabel.text = productDescription
         productDescriptionLabel.numberOfLines = 0
-        productDescriptionLabel.textColor = UIColor(named: "Black")
-        productDescriptionLabel.font = UIFont.systemFont(ofSize: 17, weight: .light)
+        productDescriptionLabel.textColor = UIColor(named: "DarkGray")
+        productDescriptionLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         contentView.addSubview(productDescriptionLabel)
         
         productDescriptionLabel.snp.makeConstraints { make in
