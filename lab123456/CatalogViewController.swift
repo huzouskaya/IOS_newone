@@ -7,10 +7,10 @@ final class CatalogViewController: UIViewController {
         private let categoriesStackView = UIStackView()
         private let collectionView: UICollectionView = {
             let layout = UICollectionViewFlowLayout()
-            layout.minimumLineSpacing = 16
-            layout.minimumInteritemSpacing = 16
+            layout.minimumLineSpacing = 32
+            layout.minimumInteritemSpacing = 32
             let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-            cv.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.96, alpha: 1)
+            cv.backgroundColor = UIColor(named: "White")
             cv.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseID)
             return cv
         }()
@@ -135,7 +135,7 @@ final class CatalogViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-60)
         }
         
-        setupBottomMenu()
+        setupTabBar()
     }
  
         private func setupCategories() {
@@ -145,6 +145,7 @@ final class CatalogViewController: UIViewController {
             categoriesContainer.layer.shadowOffset = CGSize(width: 0, height: 2)
             categoriesContainer.layer.shadowOpacity = 0.1
             categoriesContainer.layer.shadowRadius = 4
+            categoriesContainer.layer.masksToBounds = false
             
             view.addSubview(categoriesContainer)
             categoriesContainer.snp.makeConstraints { make in
@@ -183,48 +184,36 @@ final class CatalogViewController: UIViewController {
             }
         }
         
-        private func setupBottomMenu() {
-            bottomMenuView.backgroundColor = .white
-            view.addSubview(bottomMenuView)
-            bottomMenuView.snp.makeConstraints { make in
-                make.leading.trailing.equalToSuperview()
-                make.bottom.equalTo(view.safeAreaLayoutGuide)
-                make.height.equalTo(60)
+        private func setupTabBar() {
+            let tabBar = UITabBar()
+            view.addSubview(tabBar)
+            
+            // Создаем элементы таббара
+            let menuItem = UITabBarItem(title: "Меню", image: UIImage(named: "menu")?.withRenderingMode(.alwaysTemplate), tag: 0)
+            let cartItem = UITabBarItem(title: "Корзина", image: UIImage(named: "cart")?.withRenderingMode(.alwaysTemplate), tag: 1)
+            
+            // Настройка внешнего вида
+            tabBar.items = [menuItem, cartItem]
+            tabBar.backgroundColor = UIColor(named: "White")
+            tabBar.tintColor = .black
+            tabBar.unselectedItemTintColor = .gray
+            
+            // Позиционирование
+            tabBar.snp.makeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.bottom.equalTo(view.safeAreaLayoutGuide)
+                $0.height.equalTo(48)
             }
             
-            let buttonsContainer = UIView()
-            bottomMenuView.addSubview(buttonsContainer)
-            buttonsContainer.snp.makeConstraints { make in
-                make.centerX.equalToSuperview()
-                make.centerY.equalToSuperview()
-                make.height.equalTo(40)
-            }
-            
-            menuButton.setImage(UIImage(named: "menu"), for: .normal)
-            menuButton.tintColor = .black
-            buttonsContainer.addSubview(menuButton)
-            menuButton.snp.makeConstraints { make in
-                make.leading.equalToSuperview()
-                make.centerY.equalToSuperview()
-                make.width.height.equalTo(30)
-            }
-            
-            cartButton.setImage(UIImage(named: "cart"), for: .normal)
-            cartButton.tintColor = .black
-            buttonsContainer.addSubview(cartButton)
-            cartButton.snp.makeConstraints { make in
-                make.leading.equalTo(menuButton.snp.trailing).offset(40)
-                make.trailing.equalToSuperview()
-                make.centerY.equalToSuperview()
-                make.width.height.equalTo(30)
-            }
-            
-            let separator = UIView()
-            separator.backgroundColor = .lightGray.withAlphaComponent(0.5)
-            bottomMenuView.addSubview(separator)
-            separator.snp.makeConstraints { make in
-                make.top.leading.trailing.equalToSuperview()
-                make.height.equalTo(1)
+            // Центрирование иконок с разными отступами
+            DispatchQueue.main.async {
+                guard let items = tabBar.items, items.count == 2 else { return }
+                
+                // Для левой иконки (Меню) - положительный отступ справа
+                items[0].titlePositionAdjustment = UIOffset(horizontal: 60, vertical: 0)
+                
+                // Для правой иконки (Корзина) - положительный отступ слева
+                items[1].titlePositionAdjustment = UIOffset(horizontal: -60, vertical: 0)
             }
         }
         
@@ -232,7 +221,7 @@ final class CatalogViewController: UIViewController {
             categoriesStackView.arrangedSubviews.forEach { view in
                 guard let button = view as? UIButton else { return }
                 button.backgroundColor = UIColor(named: "Gray")
-                button.setTitleColor(.darkGray, for: .normal)
+                button.setTitleColor(UIColor(named: "Black"), for: .normal)
                 button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .medium)
             }
             
@@ -259,7 +248,7 @@ extension CatalogViewController: UICollectionViewDataSource, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
             let totalWidth = view.frame.width
-            let padding: CGFloat = 11 * 2
+            let padding: CGFloat = 16 * 2
             let itemWidth = totalWidth - padding
             let itemHeight: CGFloat = 166
             return CGSize(width: itemWidth, height: itemHeight)
