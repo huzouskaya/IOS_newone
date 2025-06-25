@@ -2,9 +2,18 @@ import UIKit
 import SnapKit
 
 class ProductDetailViewController: UIViewController {
-    
+    var productName: String = ""
+    var productDescription: String = ""
+    var productPrice: Double = 0.0
+    var productImageURL: URL?
     // MARK: - UI Elements
-    let productImageView = UIImageView()
+    private let productImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
     let productNameLabel = UILabel()
     let infoButton = UIButton(type: .system)
     let productDescriptionLabel = UILabel()
@@ -14,10 +23,7 @@ class ProductDetailViewController: UIViewController {
     let sizesStackView = UIStackView()
     
     // MARK: - Properties
-    var productName: String = ""
-    var productDescription: String = ""
     var productImage: UIImage?
-    var productPrice: Double = 0.0
     var availableSizes: [String] = []
     var productSpecs: String = ""
     private var selectedSize: String?
