@@ -24,7 +24,6 @@
 		18D6F9622E0BA64800DA225A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D6F9612E0BA64800DA225A /* NetworkManager.swift */; };
 		18D6F9642E0BA66300DA225A /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D6F9632E0BA66300DA225A /* Endpoints.swift */; };
 		18D6F9692E0BA6DE00DA225A /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D6F9682E0BA6DE00DA225A /* NetworkError.swift */; };
-		18D6F96B2E0BA6F300DA225A /* NetworkServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D6F96A2E0BA6F300DA225A /* NetworkServiceProtocol.swift */; };
 		18D6F96E2E0BA73B00DA225A /* CatalogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D6F96D2E0BA73B00DA225A /* CatalogViewModel.swift */; };
 		18D6F9742E0BAD9E00DA225A /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 18D6F9732E0BAD9E00DA225A /* Kingfisher */; };
 /* End PBXBuildFile section */
@@ -67,7 +66,6 @@
 		18D6F9612E0BA64800DA225A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		18D6F9632E0BA66300DA225A /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoints.swift; sourceTree = "<group>"; };
 		18D6F9682E0BA6DE00DA225A /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
-		18D6F96A2E0BA6F300DA225A /* NetworkServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProtocol.swift; sourceTree = "<group>"; };
 		18D6F96D2E0BA73B00DA225A /* CatalogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -175,7 +173,6 @@
 				18D6F9632E0BA66300DA225A /* Endpoints.swift */,
 				18D6F9652E0BA67000DA225A /* Models */,
 				18D6F9662E0BA67900DA225A /* Errors */,
-				18D6F9672E0BA68200DA225A /* Protocols */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -202,14 +199,6 @@
 				18D6F9682E0BA6DE00DA225A /* NetworkError.swift */,
 			);
 			path = Errors;
-			sourceTree = "<group>";
-		};
-		18D6F9672E0BA68200DA225A /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				18D6F96A2E0BA6F300DA225A /* NetworkServiceProtocol.swift */,
-			);
-			path = Protocols;
 			sourceTree = "<group>";
 		};
 		18D6F96C2E0BA70700DA225A /* Catalog */ = {
@@ -379,7 +368,6 @@
 				18D6F9642E0BA66300DA225A /* Endpoints.swift in Sources */,
 				18D6F96E2E0BA73B00DA225A /* CatalogViewModel.swift in Sources */,
 				182B59802E09129900A422AE /* Product.swift in Sources */,
-				18D6F96B2E0BA6F300DA225A /* NetworkServiceProtocol.swift in Sources */,
 				18D6F9692E0BA6DE00DA225A /* NetworkError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

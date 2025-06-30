@@ -165,7 +165,7 @@ extension CatalogViewController: UICollectionViewDataSource, UICollectionViewDel
         }
         
         cell.configure(with: viewModel.products[indexPath.item])
-        return cell // Теперь возвращает UICollectionViewCell
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -183,7 +183,7 @@ extension CatalogViewController: UICollectionViewDataSource, UICollectionViewDel
         detailVC.productName = product.title
         detailVC.productDescription = product.description
         detailVC.productPrice = product.price
-        detailVC.productImageURL = product.image  // Передаём URL
+        detailVC.productImageURL = product.image
         
         present(detailVC, animated: true)
     }
