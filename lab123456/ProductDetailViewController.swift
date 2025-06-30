@@ -6,6 +6,7 @@ class ProductDetailViewController: UIViewController {
     var productDescription: String = ""
     var productPrice: Double = 0.0
     var productImageURL: URL?
+    
     // MARK: - UI Elements
     private let productImageView: UIImageView = {
         let imageView = UIImageView()
