@@ -50,7 +50,8 @@ final class CatalogViewController: UIViewController {
         Уход: только химчистка
         Производство: Италия (ручная сборка)
         Артикул: BL-7742-500
-        """
+        """,
+            isNew: false
         ),
         Product(
             name: "Брюки из лиоцелла",
@@ -69,7 +70,8 @@ final class CatalogViewController: UIViewController {
         Длина: стандартная (возможен подгиб)
         Производство: Португалия
         Артикул: TR-8891-100
-        """
+        """,
+            isNew: true
         ),
         Product(
             name: "Кардиган из хлопка",
@@ -90,7 +92,8 @@ final class CatalogViewController: UIViewController {
         Производство: Италия
         Сезон: весна/лето
         Артикул: CW-2294-001
-        """
+        """,
+            isNew: false
         ),
         Product(
             name: "Джинсы straight fit",
@@ -112,7 +115,17 @@ final class CatalogViewController: UIViewController {
         Длина: стандартная (подходит для роста 170-190 см)
         Производство: Турция
         Артикул: DN-4567-301
-        """
+        """,
+            isNew: false
+        ),
+        Product(
+            name: "Кожаные лоферы",
+            description: "Лоферы из натуральной кожи. Фигурная союзка с фактурным швом по контуру. Зауженный мыс. Кожаная стелька и подкладка. Прорезиненная подошва. В комплект входит пыльник.",
+            price: 14999,
+            imageName: "lofer",
+            sizes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
+            specs: "Материал: натуральная кожа\nЦвет: черный",
+            isNew: true
         ),
     ]
     
@@ -139,27 +152,36 @@ final class CatalogViewController: UIViewController {
     }
  
         private func setupCategories() {
-            let categoriesContainer = UIView()
-            categoriesContainer.backgroundColor = UIColor(named: "White")
-            categoriesContainer.layer.shadowColor = UIColor.black.cgColor
-            categoriesContainer.layer.shadowOffset = CGSize(width: 0, height: 2)
-            categoriesContainer.layer.shadowOpacity = 0.1
-            categoriesContainer.layer.shadowRadius = 4
-            categoriesContainer.layer.masksToBounds = false
-            
-            view.addSubview(categoriesContainer)
-            categoriesContainer.snp.makeConstraints { make in
-                make.top.equalTo(view.safeAreaLayoutGuide)
-                make.leading.trailing.equalToSuperview()
-                make.height.equalTo(50)
-            }
-            categoriesScrollView.showsHorizontalScrollIndicator = false
-            view.addSubview(categoriesScrollView)
-            categoriesScrollView.snp.makeConstraints { make in
-                make.top.equalTo(view.safeAreaLayoutGuide)
-                make.leading.trailing.equalToSuperview()
-                make.height.equalTo(50)
-            }
+            let shadowContainer = UIView()
+                shadowContainer.backgroundColor = .clear
+                shadowContainer.layer.shadowColor = UIColor.black.cgColor
+                shadowContainer.layer.shadowOffset = CGSize(width: 0, height: 60)
+                shadowContainer.layer.shadowOpacity = 0.12
+                shadowContainer.layer.shadowRadius = 6
+                shadowContainer.layer.masksToBounds = false
+                
+                let contentContainer = UIView()
+                contentContainer.backgroundColor = UIColor(named: "White")
+                contentContainer.layer.masksToBounds = true
+                contentContainer.layer.cornerRadius = 0
+                
+                view.addSubview(shadowContainer)
+                shadowContainer.addSubview(contentContainer)
+                contentContainer.addSubview(categoriesScrollView)
+                
+                shadowContainer.snp.makeConstraints { make in
+                    make.top.equalTo(view.safeAreaLayoutGuide)
+                    make.leading.trailing.equalToSuperview()
+                    make.height.equalTo(50)
+                }
+                
+                contentContainer.snp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
+                
+                categoriesScrollView.snp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
             
             categoriesStackView.axis = .horizontal
             categoriesStackView.spacing = 20
