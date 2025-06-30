@@ -2,6 +2,8 @@ import UIKit
 import SnapKit
 
 final class CatalogViewController: UIViewController {
+    private let viewModel = CatalogViewModel()
+        private var tableView: UITableView!
     
     private let categoriesScrollView = UIScrollView()
         private let categoriesStackView = UIStackView()
@@ -21,104 +23,18 @@ final class CatalogViewController: UIViewController {
         private let categories = ["Новинки", "Одежда", "Обувь", "Аксессуары"]
         private var selectedCategoryIndex = 0
     
-    private let products: [Product] = [
-        Product(
-            name: "Блейзер прямого кроя",
-            description: """
-            Двубортный блейзер прямого кроя из ткани на основе лиоцелла и вискозы.
-            Отложной воротник с заостренными лацканами.
-            Длинные рукава с пуговицами на манжетах, подплечники.
-            Передние карманы с клапанами.
-            Нагрудный прорезной карман.
-            Внутренние карманы.
-            Подкладка в тон.
-            Застежка на пуговицы.
-            """,
-            price: 2970,
-            imageName: "blazer",
-            sizes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
-            specs: """
-        Материал: 65% лиоцелл, 35% вискоза (плотность 280 г/м²)
-        Подкладка: 100% вискоза (атласное плетение)
-        Конструкция: полуприлегающий силуэт с подплечниками
-        Детали:
-        - 2 внутренних кармана (один с клапаном)
-        - Нагрудный карман для платка
-        - 4 функциональные пуговицы на рукавах
-        Фурнитура: пуговицы из рога буйвала
-        Цвет: глубокий синий (цвет midnight blue)
-        Уход: только химчистка
-        Производство: Италия (ручная сборка)
-        Артикул: BL-7742-500
-        """
-        ),
-        Product(
-            name: "Брюки из лиоцелла",
-            description: "Брюки прямого кроя из ткани на основе лиоцелла и вискозы. Защипы под поясом. Передние классические карманы и прорезные карманы сзади. Застежка на молнию, внешнюю и внутреннюю пуговицы.",
-            price: 7500,
-            imageName: "trousers",
-            sizes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
-            specs: """
-        Материал: 70% лиоцелл, 30% вискоза (плотность 240 г/м²)
-        Подкладка: 100% вискоза (в области пояса и карманов)
-        Особенности: защипы под поясом для идеальной посадки
-        Карманы: 2 передних классических + 2 прорезных сзади
-        Застежка: молния + пуговица (внешняя и внутренняя)
-        Цвет: угольно-черный (стойкое окрашивание)
-        Уход: химчистка или деликатная стирка при 30°C
-        Длина: стандартная (возможен подгиб)
-        Производство: Португалия
-        Артикул: TR-8891-100
-        """
-        ),
-        Product(
-            name: "Кардиган из хлопка",
-            description: """
-        Уютный кардиган из плотного хлопка с короткими рукавами и застежкой на пуговицы.
-        Классический прямой крой подходит для любого типа фигуры.
-        Универсальная модель для создания многослойных образов.
-        Идеально сочетается с футболками, рубашками и блузами.
-        """,
-            price: 14999,
-            imageName: "cardigan",
-            sizes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
-            specs: """
-        Материал: 100% хлопок (плотность 280 г/м²)
-        Уход: машинная стирка при 30°C, глажка на средней температуре
-        Цвет: черный (не линяет)
-        Фурнитура: пуговицы из натурального перламутра
-        Производство: Италия
-        Сезон: весна/лето
-        Артикул: CW-2294-001
-        """
-        ),
-        Product(
-            name: "Джинсы straight fit",
-            description: """
-        Классические прямые джинсы универсального кроя из плотного хлопка.
-        Модель с пятью карманами: два передних, два задних и маленький
-        карман для монет. Удобная посадка по фигуре без стягивания.
-        Металлическая фурнитура и прочные двойные строчки для долговечности.
-        """,
-            price: 6750,
-            imageName: "jeans",
-            sizes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
-            specs: """
-        Материал: 98% хлопок, 2% эластан (плотность 12 oz)
-        Посадка: универсальный straight fit (прямой крой)
-        Детали: 5 карманов (включая маленький для монет), металлическая фурнитура
-        Цвет: классический синий (не выцветает)
-        Уход: стирка при 30°C, избегайте отбеливания
-        Длина: стандартная (подходит для роста 170-190 см)
-        Производство: Турция
-        Артикул: DN-4567-301
-        """
-        ),
-    ]
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        loadData()
+    }
+    
+    private func loadData() {
+        viewModel.fetchProducts { [weak self] in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
     }
     
     private func setupUI() {
@@ -237,13 +153,19 @@ final class CatalogViewController: UIViewController {
 
 extension CatalogViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        products.count
+        viewModel.products.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.reuseID, for: indexPath) as! ProductCell
-        cell.configure(with: products[indexPath.item])
-        return cell
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: ProductCell.reuseID,
+            for: indexPath
+        ) as? ProductCell else {
+            fatalError("Не удалось создать ячейку ProductCell")
+        }
+        
+        cell.configure(with: viewModel.products[indexPath.item])
+        return cell // Теперь возвращает UICollectionViewCell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -255,25 +177,15 @@ extension CatalogViewController: UICollectionViewDataSource, UICollectionViewDel
         }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let product = products[indexPath.item]
+        let product = viewModel.products[indexPath.item]
         let detailVC = ProductDetailViewController()
-     
-        detailVC.productName = product.name
+        
+        detailVC.productName = product.title
         detailVC.productDescription = product.description
-        detailVC.productImage = UIImage(named: product.imageName)
         detailVC.productPrice = product.price
-        detailVC.availableSizes = product.sizes
-        detailVC.productSpecs = product.specs
-        
-        
-        if let sheet = detailVC.sheetPresentationController {
-            sheet.detents = [.large()]
-            sheet.prefersGrabberVisible = true
-            sheet.preferredCornerRadius = 20
-        }
+        detailVC.productImageURL = product.image  // Передаём URL
         
         present(detailVC, animated: true)
-    
     }
 }
 
