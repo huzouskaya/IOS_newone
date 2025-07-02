@@ -12,6 +12,7 @@ class ProductCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        setupNewLabel()
     }
 
     required init?(coder: NSCoder) {
@@ -61,10 +62,34 @@ class ProductCell: UICollectionViewCell {
             make.bottom.equalToSuperview().offset(-8)
         }
     }
+    
+    private let newLabel: UILabel = {
+        let label = UILabel()
+        label.text = "NEW"
+        label.textColor = UIColor(named: "White")
+        label.backgroundColor = UIColor(named: "Dark")
+        label.font = UIFont.systemFont(ofSize: 11, weight: .bold)
+        label.textAlignment = .center
+        label.layer.cornerRadius = 12
+        label.layer.masksToBounds = true
+        label.isHidden = true
+        return label
+    }()
+    
+    private func setupNewLabel() {
+        contentView.addSubview(newLabel)
+        newLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(8)
+            make.leading.equalToSuperview().offset(8)
+            make.width.equalTo(44.25)
+            make.height.equalTo(24)
+        }
+    }
 
     func configure(with product: Product) {
         nameLabel.text = product.name
         descriptionLabel.text = product.description
+        newLabel.isHidden = !product.isNew
         let priceFormatted = String(format: "%.0f", product.price)
         priceButton.setTitle("\(priceFormatted) ₽", for: .normal)
         productImageView.image = UIImage(named: product.imageName)

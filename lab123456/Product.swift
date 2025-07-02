@@ -7,4 +7,5 @@ struct Product {
     let imageName: String
     let sizes: [String]
     let specs: String
+    let isNew: Bool
 }
